@@ -1,7 +1,7 @@
 # Dubey's Banking Management System (DBMS)
 
 A comprehensive end-to-end banking system built with PL/SQL backend and modern UI frontend.
-**Developed by Sunny Dubey**
+**Developed by Shivam Dubey**
 
 ## Features
 
@@ -98,4 +98,4 @@ The setup includes sample data:
 
 ## Author
 
-Dubey's Banking Management System - PL/SQL Implementation by Sunny Dubey
+Dubey's Banking Management System - PL/SQL Implementation by Shivam Dubey

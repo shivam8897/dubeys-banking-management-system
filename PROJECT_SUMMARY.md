@@ -4,6 +4,8 @@
 
 A comprehensive, production-ready Banking Management System built with Oracle PL/SQL backend and Python Flask frontend. This system demonstrates enterprise-level database design, advanced PL/SQL programming, and modern web development practices.
 
+**Developed by Shivam Dubey**
+
 ## 📋 Project Specifications Met
 
 ### ✅ Core Requirements Delivered

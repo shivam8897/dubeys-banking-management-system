@@ -1,6 +1,6 @@
 """
 Dubey's Banking Management System - Demo Flask Application
-Author: Sunny Dubey
+Author: Shivam Dubey
 Description: Demo web interface (works without Oracle database)
 """
 

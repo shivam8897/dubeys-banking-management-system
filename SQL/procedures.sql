@@ -1,5 +1,5 @@
 -- Banking Management System - Stored Procedures
--- Author: BMS Development Team
+-- Author: Shivam Dubey
 -- Description: Core business logic procedures
 
 -- Procedure to add a new customer

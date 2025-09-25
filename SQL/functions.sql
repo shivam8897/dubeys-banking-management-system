@@ -1,5 +1,5 @@
 -- Banking Management System - Functions
--- Author: BMS Development Team
+-- Author: Shivam Dubey
 -- Description: Utility functions for banking operations
 
 -- Function to calculate EMI (Equated Monthly Installment)

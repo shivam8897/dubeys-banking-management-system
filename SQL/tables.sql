@@ -1,5 +1,5 @@
 -- Banking Management System - Table Creation Script
--- Author: BMS Development Team
+-- Author: Shivam Dubey
 -- Description: Core database schema for banking operations
 
 -- Drop tables if they exist (for clean setup)

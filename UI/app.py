@@ -1,6 +1,6 @@
 """
 Dubey's Banking Management System - Flask Web Application
-Author: Sunny Dubey
+Author: Shivam Dubey
 Description: Web interface for banking operations
 """
 
