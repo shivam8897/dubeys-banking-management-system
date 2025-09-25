@@ -1,0 +1,14 @@
+[build]
+  publish = "UI/static"
+  command = "echo 'Building Dubey's Banking Management System'"
+
+[build.environment]
+  PYTHON_VERSION = "3.8"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[context.production.environment]
+  NODE_VERSION = "16"
