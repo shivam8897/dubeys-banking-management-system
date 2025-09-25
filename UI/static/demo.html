@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo - Dubey's Banking Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .navbar-brand {
+            font-weight: bold;
+        }
+        .card-header {
+            background-color: #007bff;
+            color: white;
+        }
+        .demo-alert {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-university"></i> Dubey's Banking Management System
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#customers">Customers</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#accounts">Accounts</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#transactions">Transactions</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#loans">Loans</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#reports">Reports</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <!-- Demo Alert -->
+        <div class="alert demo-alert" role="alert">
+            <h5><i class="fas fa-info-circle"></i> Interactive Demo Mode</h5>
+            <p class="mb-0">This is a live demo of Dubey's Banking Management System. All features are functional with sample data. 
+            For the full PL/SQL backend, visit the <a href="https://github.com/shivam8897/dubeys-banking-management-system" class="text-white"><u>GitHub Repository</u></a>.</p>
+        </div>
+
+        <!-- Tab Navigation -->
+        <ul class="nav nav-tabs" id="bankingTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="customers-tab" data-bs-toggle="tab" data-bs-target="#customers" type="button" role="tab">
+                    <i class="fas fa-users"></i> Customers
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="accounts-tab" data-bs-toggle="tab" data-bs-target="#accounts" type="button" role="tab">
+                    <i class="fas fa-credit-card"></i> Accounts
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="transactions-tab" data-bs-toggle="tab" data-bs-target="#transactions" type="button" role="tab">
+                    <i class="fas fa-exchange-alt"></i> Transactions
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="loans-tab" data-bs-toggle="tab" data-bs-target="#loans" type="button" role="tab">
+                    <i class="fas fa-money-bill-wave"></i> Loans
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="reports-tab" data-bs-toggle="tab" data-bs-target="#reports" type="button" role="tab">
+                    <i class="fas fa-chart-bar"></i> Reports
+                </button>
+            </li>
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content" id="bankingTabContent">
+            <!-- Customers Tab -->
+            <div class="tab-pane fade show active" id="customers" role="tabpanel">
+                <div class="row mt-4">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0"><i class="fas fa-user-plus"></i> Add New Customer</h5>
+                            </div>
+                            <div class="card-body">
+                                <form id="customerForm">
+                                    <div class="mb-3">
+                                        <label class="form-label">First Name</label>
+                                        <input type="text" class="form-control" id="firstName" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Last Name</label>
+                                        <input type="text" class="form-control" id="lastName" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Email</label>
+                                        <input type="email" class="form-control" id="email" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Phone</label>
+                                        <input type="tel" class="form-control" id="phone" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Date of Birth</label>
+                                        <input type="date" class="form-control" id="dob" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="fas fa-save"></i> Add Customer
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0"><i class="fas fa-list"></i> Customer List</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped" id="customersTable">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Name</th>
+                                                <th>Email</th>
+                                                <th>Phone</th>
+                                                <th>Status</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="customersTableBody">
+                                            <tr>
+                                                <td>1001</td>
+                                                <td>John Doe</td>
+                                                <td>john.doe@email.com</td>
+                                                <td>9876543210</td>
+                                                <td><span class="badge bg-success">Active</span></td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-primary">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>1002</td>
+                                                <td>Jane Smith</td>
+                                                <td>jane.smith@email.com</td>
+                                                <td>9876543211</td>
+                                                <td><span class="badge bg-success">Active</span></td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-primary">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Accounts Tab -->
+            <div class="tab-pane fade" id="accounts" role="tabpanel">
+                <div class="row mt-4">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0"><i class="fas fa-plus-circle"></i> Open New Account</h5>
+                            </div>
+                            <div class="card-body">
+                                <form id="accountForm">
+                                    <div class="mb-3">
+                                        <label class="form-label">Customer</label>
+                                        <select class="form-select" id="accountCustomer" required>
+                                            <option value="">Select Customer</option>
+                                            <option value="1001">John Doe</option>
+                                            <option value="1002">Jane Smith</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Account Type</label>
+                                        <select class="form-select" id="accountType" required>
+                                            <option value="">Select Type</option>
+                                            <option value="SAVINGS">Savings (Min: ₹1,000)</option>
+                                            <option value="CURRENT">Current (Min: ₹5,000)</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Initial Deposit</label>
+                                        <input type="number" class="form-control" id="initialDeposit" min="1000" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="fas fa-save"></i> Open Account
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0"><i class="fas fa-list"></i> Account List</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped" id="accountsTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Account ID</th>
+                                                <th>Customer</th>
+                                                <th>Type</th>
+                                                <th>Balance</th>
+                                                <th>Status</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="accountsTableBody">
+                                            <tr>
+                                                <td>100001</td>
+                                                <td>John Doe</td>
+                                                <td><span class="badge bg-success">SAVINGS</span></td>
+                                                <td>₹56,000.00</td>
+                                                <td><span class="badge bg-success">Active</span></td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-primary">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>100002</td>
+                                                <td>Jane Smith</td>
+                                                <td><span class="badge bg-info">CURRENT</span></td>
+                                                <td>₹34,000.00</td>
+                                                <td><span class="badge bg-success">Active</span></td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-primary">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Transactions Tab -->
+            <div class="tab-pane fade" id="transactions" role="tabpanel">
+                <div class="row mt-4">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <ul class="nav nav-tabs card-header-tabs" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active text-white" data-bs-toggle="tab" data-bs-target="#deposit">Deposit</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link text-white" data-bs-toggle="tab" data-bs-target="#withdraw">Withdraw</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link text-white" data-bs-toggle="tab" data-bs-target="#transfer">Transfer</button>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="card-body">
+                                <div class="tab-content">
+                                    <div class="tab-pane fade show active" id="deposit">
+                                        <form id="depositForm">
+                                            <div class="mb-3">
+                                                <label class="form-label">Account</label>
+                                                <select class="form-select" required>
+                                                    <option value="">Select Account</option>
+                                                    <option value="100001">100001 - John Doe</option>
+                                                    <option value="100002">100002 - Jane Smith</option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Amount</label>
+                                                <input type="number" class="form-control" min="1" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Description</label>
+                                                <input type="text" class="form-control" value="Cash deposit">
+                                            </div>
+                                            <button type="submit" class="btn btn-success w-100">
+                                                <i class="fas fa-plus"></i> Deposit Money
+                                            </button>
+                                        </form>
+                                    </div>
+                                    <div class="tab-pane fade" id="withdraw">
+                                        <form id="withdrawForm">
+                                            <div class="mb-3">
+                                                <label class="form-label">Account</label>
+                                                <select class="form-select" required>
+                                                    <option value="">Select Account</option>
+                                                    <option value="100001">100001 - John Doe</option>
+                                                    <option value="100002">100002 - Jane Smith</option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Amount</label>
+                                                <input type="number" class="form-control" min="1" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Description</label>
+                                                <input type="text" class="form-control" value="Cash withdrawal">
+                                            </div>
+                                            <button type="submit" class="btn btn-warning w-100">
+                                                <i class="fas fa-minus"></i> Withdraw Money
+                                            </button>
+                                        </form>
+                                    </div>
+                                    <div class="tab-pane fade" id="transfer">
+                                        <form id="transferForm">
+                                            <div class="mb-3">
+                                                <label class="form-label">From Account</label>
+                                                <select class="form-select" required>
+                                                    <option value="">Select Account</option>
+                                                    <option value="100001">100001 - John Doe</option>
+                                                    <option value="100002">100002 - Jane Smith</option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">To Account</label>
+                                                <select class="form-select" required>
+                                                    <option value="">Select Account</option>
+                                                    <option value="100001">100001 - John Doe</option>
+                                                    <option value="100002">100002 - Jane Smith</option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Amount</label>
+                                                <input type="number" class="form-control" min="1" required>
+                                            </div>
+                                            <button type="submit" class="btn btn-info w-100">
+                                                <i class="fas fa-exchange-alt"></i> Transfer Funds
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0"><i class="fas fa-history"></i> Recent Transactions</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped" id="transactionsTable">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Account</th>
+                                                <th>Type</th>
+                                                <th>Amount</th>
+                                                <th>Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="transactionsTableBody">
+                                            <tr>
+                                                <td>15</td>
+                                                <td>100001</td>
+                                                <td><span class="badge bg-success">DEPOSIT</span></td>
+                                                <td class="text-success">+₹50,000.00</td>
+                                                <td>2025-01-20 10:30</td>
+                                            </tr>
+                                            <tr>
+                                                <td>14</td>
+                                                <td>100002</td>
+                                                <td><span class="badge bg-warning">WITHDRAWAL</span></td>
+                                                <td class="text-danger">-₹5,000.00</td>
+                                                <td>2025-01-20 09:15</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loans Tab -->
+            <div class="tab-pane fade" id="loans" role="tabpanel">
+                <div class="row mt-4">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0"><i class="fas fa-file-contract"></i> Apply for Loan</h5>
+                            </div>
+                            <div class="card-body">
+                                <form id="loanForm">
+                                    <div class="mb-3">
+                                        <label class="form-label">Customer</label>
+                                        <select class="form-select" required>
+                                            <option value="">Select Customer</option>
+                                            <option value="1001">John Doe</option>
+                                            <option value="1002">Jane Smith</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Loan Type</label>
+                                        <select class="form-select" required>
+                                            <option value="">Select Type</option>
+                                            <option value="PERSONAL">Personal Loan</option>
+                                            <option value="HOME">Home Loan</option>
+                                            <option value="CAR">Car Loan</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Principal Amount</label>
+                                        <input type="number" class="form-control" min="1000" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Interest Rate (%)</label>
+                                        <input type="number" class="form-control" min="1" max="30" step="0.1" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Tenure (Months)</label>
+                                        <select class="form-select" required>
+                                            <option value="">Select Tenure</option>
+                                            <option value="12">12 Months</option>
+                                            <option value="24">24 Months</option>
+                                            <option value="36">36 Months</option>
+                                            <option value="60">60 Months</option>
+                                        </select>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="fas fa-paper-plane"></i> Apply for Loan
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0"><i class="fas fa-list"></i> Loan Applications</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Loan ID</th>
+                                                <th>Customer</th>
+                                                <th>Type</th>
+                                                <th>Amount</th>
+                                                <th>EMI</th>
+                                                <th>Status</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>10001</td>
+                                                <td>John Doe</td>
+                                                <td><span class="badge bg-info">PERSONAL</span></td>
+                                                <td>₹50,000</td>
+                                                <td>₹2,347.50</td>
+                                                <td><span class="badge bg-success">DISBURSED</span></td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-primary">
+                                                        <i class="fas fa-credit-card"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>10002</td>
+                                                <td>Jane Smith</td>
+                                                <td><span class="badge bg-warning">HOME</span></td>
+                                                <td>₹500,000</td>
+                                                <td>₹4,240.50</td>
+                                                <td><span class="badge bg-warning">PENDING</span></td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-success">
+                                                        <i class="fas fa-check"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reports Tab -->
+            <div class="tab-pane fade" id="reports" role="tabpanel">
+                <div class="row mt-4">
+                    <div class="col-md-6 mb-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0"><i class="fas fa-users"></i> Customer Summary</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row text-center">
+                                    <div class="col-6">
+                                        <h3 class="text-primary">5</h3>
+                                        <p>Total Customers</p>
+                                    </div>
+                                    <div class="col-6">
+                                        <h3 class="text-success">6</h3>
+                                        <p>Active Accounts</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0"><i class="fas fa-money-bill-wave"></i> Financial Summary</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row text-center">
+                                    <div class="col-6">
+                                        <h3 class="text-warning">₹6.5L</h3>
+                                        <p>Total Deposits</p>
+                                    </div>
+                                    <div class="col-6">
+                                        <h3 class="text-info">₹5.5L</h3>
+                                        <p>Active Loans</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-light text-center text-muted py-3 mt-5">
+        <div class="container">
+            <p>&copy; 2025 Dubey's Banking Management System. Developed by Shivam Dubey. Built with PL/SQL and Flask.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Demo functionality
+        let customerIdCounter = 1003;
+        let accountIdCounter = 100003;
+        let transactionIdCounter = 16;
+
+        // Customer form submission
+        document.getElementById('customerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            
+            // Add to table
+            const tbody = document.getElementById('customersTableBody');
+            const newRow = tbody.insertRow();
+            newRow.innerHTML = `
+                <td>${customerIdCounter}</td>
+                <td>${firstName} ${lastName}</td>
+                <td>${email}</td>
+                <td>${phone}</td>
+                <td><span class="badge bg-success">Active</span></td>
+                <td>
+                    <button class="btn btn-sm btn-outline-primary">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </td>
+            `;
+            
+            customerIdCounter++;
+            
+            // Reset form
+            this.reset();
+            
+            // Show success message
+            alert(`Customer ${firstName} ${lastName} added successfully with ID: ${customerIdCounter - 1}`);
+        });
+
+        // Account form submission
+        document.getElementById('accountForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const customer = document.getElementById('accountCustomer').selectedOptions[0].text;
+            const accountType = document.getElementById('accountType').value;
+            const initialDeposit = document.getElementById('initialDeposit').value;
+            
+            // Add to table
+            const tbody = document.getElementById('accountsTableBody');
+            const newRow = tbody.insertRow();
+            newRow.innerHTML = `
+                <td>${accountIdCounter}</td>
+                <td>${customer}</td>
+                <td><span class="badge ${accountType === 'SAVINGS' ? 'bg-success' : 'bg-info'}">${accountType}</span></td>
+                <td>₹${parseFloat(initialDeposit).toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
+                <td><span class="badge bg-success">Active</span></td>
+                <td>
+                    <button class="btn btn-sm btn-outline-primary">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </td>
+            `;
+            
+            accountIdCounter++;
+            
+            // Reset form
+            this.reset();
+            
+            // Show success message
+            alert(`Account opened successfully with ID: ${accountIdCounter - 1}`);
+        });
+
+        // Transaction forms
+        ['depositForm', 'withdrawForm', 'transferForm'].forEach(formId => {
+            const form = document.getElementById(formId);
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const type = formId.replace('Form', '').toUpperCase();
+                    const amount = this.querySelector('input[type="number"]').value;
+                    
+                    // Add to transactions table
+                    const tbody = document.getElementById('transactionsTableBody');
+                    const newRow = tbody.insertRow(0); // Insert at top
+                    
+                    const badgeClass = type === 'DEPOSIT' ? 'bg-success' : type === 'WITHDRAW' ? 'bg-warning' : 'bg-info';
+                    const amountClass = type === 'DEPOSIT' ? 'text-success' : 'text-danger';
+                    const amountPrefix = type === 'DEPOSIT' ? '+' : '-';
+                    
+                    newRow.innerHTML = `
+                        <td>${transactionIdCounter}</td>
+                        <td>100001</td>
+                        <td><span class="badge ${badgeClass}">${type}</span></td>
+                        <td class="${amountClass}">${amountPrefix}₹${parseFloat(amount).toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
+                        <td>${new Date().toLocaleString()}</td>
+                    `;
+                    
+                    transactionIdCounter++;
+                    
+                    // Reset form
+                    this.reset();
+                    
+                    // Show success message
+                    alert(`${type.charAt(0) + type.slice(1).toLowerCase()} of ₹${amount} processed successfully!`);
+                });
+            }
+        });
+
+        // Loan form submission
+        document.getElementById('loanForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const customer = this.querySelector('select').selectedOptions[0].text;
+            const loanType = this.querySelector('select[name="loanType"]') ? this.querySelector('select[name="loanType"]').value : 'PERSONAL';
+            const amount = this.querySelector('input[type="number"]').value;
+            
+            alert(`Loan application submitted successfully for ${customer}. Amount: ₹${amount}. Application will be reviewed.`);
+            
+            // Reset form
+            this.reset();
+        });
+    </script>
+</body>
+</html>
