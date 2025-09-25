@@ -1,0 +1,247 @@
+{% extends "base.html" %}
+
+{% block title %}Transaction Management - Banking Management System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1 class="mb-4">
+            <i class="fas fa-exchange-alt"></i> Transaction Management
+        </h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <ul class="nav nav-tabs card-header-tabs" id="transactionTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="deposit-tab" data-bs-toggle="tab" 
+                                data-bs-target="#deposit" type="button" role="tab">Deposit</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="withdraw-tab" data-bs-toggle="tab" 
+                                data-bs-target="#withdraw" type="button" role="tab">Withdraw</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="transfer-tab" data-bs-toggle="tab" 
+                                data-bs-target="#transfer" type="button" role="tab">Transfer</button>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-body">
+                <div class="tab-content" id="transactionTabContent">
+                    <!-- Deposit Form -->
+                    <div class="tab-pane fade show active" id="deposit" role="tabpanel">
+                        <form method="POST" action="{{ url_for('deposit') }}">
+                            <div class="mb-3">
+                                <label for="deposit_account_id" class="form-label">Account</label>
+                                <select class="form-select" id="deposit_account_id" name="account_id" required>
+                                    <option value="">Select Account</option>
+                                    {% for account in accounts %}
+                                    <option value="{{ account[0] }}">{{ account[1] }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="deposit_amount" class="form-label">Amount</label>
+                                <input type="number" class="form-control" id="deposit_amount" name="amount" 
+                                       min="0.01" step="0.01" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="deposit_description" class="form-label">Description</label>
+                                <input type="text" class="form-control" id="deposit_description" 
+                                       name="description" value="Cash deposit">
+                            </div>
+                            <button type="submit" class="btn btn-success w-100">
+                                <i class="fas fa-plus"></i> Deposit Money
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Withdraw Form -->
+                    <div class="tab-pane fade" id="withdraw" role="tabpanel">
+                        <form method="POST" action="{{ url_for('withdraw') }}">
+                            <div class="mb-3">
+                                <label for="withdraw_account_id" class="form-label">Account</label>
+                                <select class="form-select" id="withdraw_account_id" name="account_id" required>
+                                    <option value="">Select Account</option>
+                                    {% for account in accounts %}
+                                    <option value="{{ account[0] }}">{{ account[1] }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="withdraw_amount" class="form-label">Amount</label>
+                                <input type="number" class="form-control" id="withdraw_amount" name="amount" 
+                                       min="0.01" step="0.01" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="withdraw_description" class="form-label">Description</label>
+                                <input type="text" class="form-control" id="withdraw_description" 
+                                       name="description" value="Cash withdrawal">
+                            </div>
+                            <button type="submit" class="btn btn-warning w-100">
+                                <i class="fas fa-minus"></i> Withdraw Money
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Transfer Form -->
+                    <div class="tab-pane fade" id="transfer" role="tabpanel">
+                        <form method="POST" action="{{ url_for('transfer') }}">
+                            <div class="mb-3">
+                                <label for="from_account_id" class="form-label">From Account</label>
+                                <select class="form-select" id="from_account_id" name="from_account_id" required>
+                                    <option value="">Select Source Account</option>
+                                    {% for account in accounts %}
+                                    <option value="{{ account[0] }}">{{ account[1] }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="to_account_id" class="form-label">To Account</label>
+                                <select class="form-select" id="to_account_id" name="to_account_id" required>
+                                    <option value="">Select Destination Account</option>
+                                    {% for account in accounts %}
+                                    <option value="{{ account[0] }}">{{ account[1] }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="transfer_amount" class="form-label">Amount</label>
+                                <input type="number" class="form-control" id="transfer_amount" name="amount" 
+                                       min="0.01" step="0.01" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="transfer_description" class="form-label">Description</label>
+                                <input type="text" class="form-control" id="transfer_description" 
+                                       name="description" value="Fund transfer">
+                            </div>
+                            <button type="submit" class="btn btn-info w-100">
+                                <i class="fas fa-exchange-alt"></i> Transfer Funds
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-history"></i> Recent Transactions</h5>
+            </div>
+            <div class="card-body">
+                {% if transactions %}
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Account</th>
+                                <th>Type</th>
+                                <th>Amount</th>
+                                <th>Balance After</th>
+                                <th>Description</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for transaction in transactions %}
+                            <tr>
+                                <td>{{ transaction[0] }}</td>
+                                <td><code>{{ transaction[2] }}</code></td>
+                                <td>
+                                    {% if transaction[3] == 'DEPOSIT' %}
+                                        <span class="badge bg-success">{{ transaction[3] }}</span>
+                                    {% elif transaction[3] == 'WITHDRAWAL' %}
+                                        <span class="badge bg-warning">{{ transaction[3] }}</span>
+                                    {% elif transaction[3] == 'TRANSFER_IN' %}
+                                        <span class="badge bg-info">TRANSFER IN</span>
+                                    {% elif transaction[3] == 'TRANSFER_OUT' %}
+                                        <span class="badge bg-secondary">TRANSFER OUT</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-end">
+                                    {% if transaction[3] in ['DEPOSIT', 'TRANSFER_IN'] %}
+                                        <span class="text-success">+₹{{ "{:,.2f}".format(transaction[4]) }}</span>
+                                    {% else %}
+                                        <span class="text-danger">-₹{{ "{:,.2f}".format(transaction[4]) }}</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-end">₹{{ "{:,.2f}".format(transaction[5]) }}</td>
+                                <td>{{ transaction[6] }}</td>
+                                <td>{{ transaction[7].strftime('%Y-%m-%d %H:%M') if transaction[7] else 'N/A' }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-4">
+                    <i class="fas fa-exchange-alt fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">No transactions found</h5>
+                    <p class="text-muted">Process your first transaction using the forms on the left.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Prevent selecting same account for transfer
+document.getElementById('from_account_id').addEventListener('change', function() {
+    const fromAccountId = this.value;
+    const toAccountSelect = document.getElementById('to_account_id');
+    
+    // Enable all options first
+    Array.from(toAccountSelect.options).forEach(option => {
+        option.disabled = false;
+    });
+    
+    // Disable the selected from account in to account dropdown
+    if (fromAccountId) {
+        Array.from(toAccountSelect.options).forEach(option => {
+            if (option.value === fromAccountId) {
+                option.disabled = true;
+            }
+        });
+        
+        // Reset to account selection if it matches from account
+        if (toAccountSelect.value === fromAccountId) {
+            toAccountSelect.value = '';
+        }
+    }
+});
+
+document.getElementById('to_account_id').addEventListener('change', function() {
+    const toAccountId = this.value;
+    const fromAccountSelect = document.getElementById('from_account_id');
+    
+    // Enable all options first
+    Array.from(fromAccountSelect.options).forEach(option => {
+        option.disabled = false;
+    });
+    
+    // Disable the selected to account in from account dropdown
+    if (toAccountId) {
+        Array.from(fromAccountSelect.options).forEach(option => {
+            if (option.value === toAccountId) {
+                option.disabled = true;
+            }
+        });
+        
+        // Reset from account selection if it matches to account
+        if (fromAccountSelect.value === toAccountId) {
+            fromAccountSelect.value = '';
+        }
+    }
+});
+</script>
+{% endblock %}

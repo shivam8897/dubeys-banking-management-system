@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+
+{% block title %}Account Management - Banking Management System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1 class="mb-4">
+            <i class="fas fa-credit-card"></i> Account Management
+        </h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-plus-circle"></i> Open New Account</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('open_account') }}">
+                    <div class="mb-3">
+                        <label for="customer_id" class="form-label">Customer</label>
+                        <select class="form-select" id="customer_id" name="customer_id" required>
+                            <option value="">Select Customer</option>
+                            {% for customer in customers %}
+                            <option value="{{ customer[0] }}">{{ customer[1] }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="account_type_id" class="form-label">Account Type</label>
+                        <select class="form-select" id="account_type_id" name="account_type_id" required>
+                            <option value="">Select Account Type</option>
+                            {% for account_type in account_types %}
+                            <option value="{{ account_type[0] }}" data-min-balance="{{ account_type[2] }}">
+                                {{ account_type[1] }} (Min Balance: ₹{{ account_type[2] }})
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="initial_deposit" class="form-label">Initial Deposit</label>
+                        <input type="number" class="form-control" id="initial_deposit" name="initial_deposit" 
+                               min="0" step="0.01" required>
+                        <div class="form-text">Minimum balance requirement will be validated</div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-save"></i> Open Account
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-list"></i> Account List</h5>
+            </div>
+            <div class="card-body">
+                {% if accounts %}
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Account ID</th>
+                                <th>Account Number</th>
+                                <th>Customer</th>
+                                <th>Type</th>
+                                <th>Balance</th>
+                                <th>Opened Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for account in accounts %}
+                            <tr>
+                                <td>{{ account[0] }}</td>
+                                <td><code>{{ account[1] }}</code></td>
+                                <td>{{ account[2] }}</td>
+                                <td>
+                                    {% if account[3] == 'SAVINGS' %}
+                                        <span class="badge bg-success">{{ account[3] }}</span>
+                                    {% else %}
+                                        <span class="badge bg-info">{{ account[3] }}</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-end">₹{{ "{:,.2f}".format(account[4]) }}</td>
+                                <td>{{ account[5].strftime('%Y-%m-%d') if account[5] else 'N/A' }}</td>
+                                <td>
+                                    {% if account[6] == 'ACTIVE' %}
+                                        <span class="badge bg-success">Active</span>
+                                    {% elif account[6] == 'CLOSED' %}
+                                        <span class="badge bg-secondary">Closed</span>
+                                    {% else %}
+                                        <span class="badge bg-warning">{{ account[6] }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <button type="button" class="btn btn-outline-primary" 
+                                                onclick="viewStatement({{ account[0] }})" title="View Statement">
+                                            <i class="fas fa-file-alt"></i>
+                                        </button>
+                                        {% if account[6] == 'ACTIVE' %}
+                                        <button type="button" class="btn btn-outline-danger" 
+                                                onclick="closeAccount({{ account[0] }})" title="Close Account">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-4">
+                    <i class="fas fa-credit-card fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">No accounts found</h5>
+                    <p class="text-muted">Open your first account using the form on the left.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function viewStatement(accountId) {
+    alert('Account statement functionality would be implemented here for account ID: ' + accountId);
+}
+
+function closeAccount(accountId) {
+    if (confirm('Are you sure you want to close this account? This action cannot be undone.')) {
+        alert('Account closure functionality would be implemented here for account ID: ' + accountId);
+    }
+}
+
+// Update minimum balance hint when account type changes
+document.getElementById('account_type_id').addEventListener('change', function() {
+    const selectedOption = this.options[this.selectedIndex];
+    const minBalance = selectedOption.getAttribute('data-min-balance');
+    const initialDepositField = document.getElementById('initial_deposit');
+    
+    if (minBalance) {
+        initialDepositField.min = minBalance;
+        initialDepositField.placeholder = `Minimum: ₹${minBalance}`;
+    }
+});
+</script>
+{% endblock %}
